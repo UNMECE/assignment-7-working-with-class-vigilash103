@@ -4,127 +4,166 @@
 class electricField
 {
     private:
-        double *eX;
-        double *eY;
-        double *eZ;
+        double eX;
+        double eY;
+        double eZ;
     public:
-        electricField(double *eX, double *eY, double *eZ)
+        electricField(){};
+
+        electricField(double ex, double ey, double ez)
         {
-            this->eX = eX;
-            this->eY = eY;
-            this->eZ = eZ;
+            eX = ex;
+            eY = ey;
+            eZ = ez;
         }
 
         ~electricField()
         {
-            delete eX;
-            delete eY;
-            delete eZ;
+            std::cout << "Deconstructor was called" << std::endl;
         }
 
         double getEx()
         {
-            return *eX;
+            return eX;
         }
 
         double getEy()
         {
-            return *eY;
+            return eY;
         }
 
         double getEz()
         {
-            return *eZ;
+            return eZ;
         }
 
-        void setEx(double value)
+        void setEx(double ex)
         {
-            *eX = value;
+            eX = ex;
         }
 
-        void setEy(double value)
+        void setEy(double ey)
         {
-            *eY = value;
+            eY = ey;
         }
 
-        void setEz(double value)
+        void setEz(double ez)
         {
-            *eZ = value;
+            eZ = ez;
+        }
+
+        double calculateMagnitude()
+        {
+            return std::sqrt(eX * eX + eY * eY + eZ * eZ);
+        }
+
+        double innerProduct()
+        {
+            return eX * eX + eY * eY + eZ * eZ;
         }
 };
 
 class magneticField
 {
     private:
-        double *bX;
-        double *bY;
-        double *bZ;
+        double bX;
+        double bY;
+        double bZ;
     public:
-        magneticField(double *bX, double *bY, double *bZ)
+        magneticField(){};
+
+        magneticField(double bx, double by, double bz)
         {
-            this->bX = bX;
-            this->bY = bY;
-            this->bZ = bZ;
+            bX = bx;
+            bY = by;
+            bZ = bz;
         }
         ~magneticField()
         {
-            delete bX;
-            delete bY;
-            delete bZ;
+            std::cout << "Deconstructor was called" << std::endl;
         }
 
         double getBx()
         {
-            return *bX;
+            return bX;
         }
 
         double getBy()
         {
-            return *bY;
+            return bY;
         }
 
         double getBz()
         {
-            return *bZ;
+            return bZ;
         }
 
-        void setBx(double value)
+        void setBx(double bx)
         {
-            *bX = value;
+            bX = bx;
         }
 
-        void setBy(double value)
+        void setBy(double by)
         {
-            *bY = value;
+            bY = by;
         }
 
-        void setBz(double value)
+        void setBz(double bz)
         {
-            *bZ = value;
+            bZ = bz;
+        }
+
+        double calculateMagnitude()
+        {
+            return std::sqrt(bX * bX + bY * bY + bZ * bZ);
+        }
+
+        void unitVector()
+        {
+            double mg = sqrt(bX * bX + bY * bY + bZ * bZ);
+            double m1 = bX / mg;
+            double m2 = bY / mg;
+            double m3 = bZ / mg;
+
+            std::cout << " Unit vector is: " << m1 << ", " << m2 << ", " << m3 << std::endl;
         }
 };
 
-double calculateMagnitude(double x, double y, double z)
-{
-    return std::sqrt(x * x + y * y + z * z);
-}
 
-double innerProduct(double x1, double y1, double z1, double x2, double y2, double z2)
-{
-    return x1 * x2 + y1 * y2 + z1 * z2;
-}
+
+
+
+
 
 int main(int argc, char const *argv[])
 {
     double ex = 1.0, ey = 2.0, ez = 3.0;
     double bx = 4.0, by = 5.0, bz = 6.0;
 
-    electricField eField(&ex, &ey, &ez);
-    magneticField mField(&bx, &by, &bz);
+    electricField eFieldDefault;
+    electricField eFieldComponent(ex, ey, ez);
+    magneticField mFieldDefault;
+    magneticField mFieldComponent(bx, by, bz);
 
-    std::cout << "Electric Field Magnitude: " << calculateMagnitude(eField.getEx(), eField.getEy(), eField.getEz()) << std::endl;
-    std::cout << "Magnetic Field Magnitude: " << calculateMagnitude(mField.getBx(), mField.getBy(), mField.getBz()) << std::endl;
-    std::cout << "Inner Product: " << innerProduct(eField.getEx(), eField.getEy(), eField.getEz(), mField.getBx(), mField.getBy(), mField.getBz()) << std::endl;
+    std::cout << "Magnatude with default electric field: " << eFieldDefault.calculateMagnitude() << std::endl;
+    std::cout << "Magnatude with parameterized electric field: " << eFieldComponent.calculateMagnitude() << std::endl;
+    std::cout << "Magnatude with default magnetic field: " << mFieldDefault.calculateMagnitude() << std::endl;
+    std::cout << "Magnatude with parameterized magnetic field: " << mFieldComponent.calculateMagnitude() << std::endl;
+
+    eFieldComponent.setEx(4);
+    eFieldComponent.setEy(5);
+    eFieldComponent.setEz(6);
+
+    mFieldComponent.setBx(7);
+    mFieldComponent.setBx(8);
+    mFieldComponent.setBx(9);
+
+    std::cout << "New magnatude for electric field: " << eFieldComponent.calculateMagnitude() << std::endl;
+    std::cout << "New magnatude for magnetic field: " << mFieldComponent.calculateMagnitude() << std::endl;
+    std::cout << "********************************\n";
+    std::cout << "Inner product of electric field: " << eFieldComponent.innerProduct() << std::endl;
+    
+    mFieldComponent.unitVector();
 
     return 0;
 }
